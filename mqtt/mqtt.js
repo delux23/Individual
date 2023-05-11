@@ -56,22 +56,22 @@ app.use(function(req, res, next) {
 
 
 
-const comPort1 = new SerialPort({
-  path: 'COM12',
-  baudRate: 9600,
-  dataBits: 8,
-  stopBits: 1,
-  parity: 'none',
-  });
-
-const parser = comPort1.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+// const comPort1 = new SerialPort({
+//   path: 'COM12',
+//   baudRate: 9600,
+//   dataBits: 8,
+//   stopBits: 1,
+//   parity: 'none',
+//   });
 
 // const parser = comPort1.pipe(new ReadlineParser({ delimiter: '\r\n' }));
-  // Read the port data
-// port1.on("open", () => {
-//   console.log('serial port open');
-// });
-// parser.on('data', data =>{
+
+// // const parser = comPort1.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+//   // Read the port data
+// // port1.on("open", () => {
+// //   console.log('serial port open');
+// // });
+// // parser.on('data', data =>{
 //   console.log('got word from arduino:', data);
 // });
 
@@ -119,55 +119,55 @@ client.on('connect', () => {
 
   });
 
-  const values = []; // Array to store the values
+//   const values = []; // Array to store the values
 
-  const tempValues = []; // Array to store temperature values
-  const humidityValues = []; 
-  // Array to store humidity values
+//   const tempValues = []; // Array to store temperature values
+//   const humidityValues = []; 
+//   // Array to store humidity values
   
-  let count = 0; // Counter to keep track of the number of values read
+//   let count = 0; // Counter to keep track of the number of values read
   
-  parser.on('data', (data) => {
+//   parser.on('data', (data) => {
     
-    if (data.startsWith('T')) {
-      const temperature = parseInt(data.substring(1)); // Parse the temperature value
-      tempValues.push(temperature); // Add the temperature value to the array
-    } else if (data.startsWith('H')) {
-      const humidity = parseInt(data.substring(1)); // Parse the humidity value
-      humidityValues.push(humidity); // Add the humidity value to the array
-    }
+//     if (data.startsWith('T')) {
+//       const temperature = parseInt(data.substring(1)); // Parse the temperature value
+//       tempValues.push(temperature); // Add the temperature value to the array
+//     } else if (data.startsWith('H')) {
+//       const humidity = parseInt(data.substring(1)); // Parse the humidity value
+//       humidityValues.push(humidity); // Add the humidity value to the array
+//     }
   
-    count++;
+//     count++;
   
-    // Check if 20 values have been read (10 temperature values and 10 humidity values)
-    if (count === 14) {
+//     // Check if 20 values have been read (10 temperature values and 10 humidity values)
+//     if (count === 14) {
 
-      const name = 'DAir';
-      const room = '6';
-      const floor = '2';
-      const topic = "/sensorData"
+//       const name = 'DAir';
+//       const room = '6';
+//       const floor = '2';
+//       const topic = "/sensorData"
 
-      const message = JSON.stringify({
-        name,
-        room,
-        floor,
-        tempValues,
-        humidityValues
-      });
+//       const message = JSON.stringify({
+//         name,
+//         room,
+//         floor,
+//         tempValues,
+//         humidityValues
+//       });
   
-      console.log(message);
-      client.publish(topic, message);
-      console.log("Data sent to MQTT");
+//       console.log(message);
+//       client.publish(topic, message);
+//       console.log("Data sent to MQTT");
   
-      // Reset the counter and clear the arrays for the next set of values
-      count = 0;
+//       // Reset the counter and clear the arrays for the next set of values
+//       count = 0;
 
-      tempValues.length=0;
-      humidityValues.length=0;
+//       tempValues.length=0;
+//       humidityValues.length=0;
     
-    }
+//     }
 
-  });
+//   });
   
   
   // parser.on('data', (data) => {
